@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SettingsService } from './services/services.index';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'AdminPro Test';
+
+  constructor(public settingService: SettingsService) {
+
+  }
+
+  ngOnInit() {}
 }

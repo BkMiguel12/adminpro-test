@@ -1,0 +1,43 @@
+<div class="row animated fadeIn">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Perfil del Usuario</h4>
+                <h6 class="card-subtitle">Editar información del usuario</h6>
+                <form ngNativeValidate class="form p-t-20" #f="ngForm" (ngSubmit)="updateUser(f.value)">
+                    <div class="form-group">
+                        <label for="exampleInputuname">Nombre del usuario</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="ti-user"></i></div>
+                            <input [ngModel]="user.name" name="name" type="text" class="form-control" placeholder="Ingrese su nombre">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Correo del usuario</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="ti-email"></i></div>
+                            <input [ngModel]="user.email" [disabled]="user.google" name="email" type="email" class="form-control" placeholder="Ingrese su correo">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success waves-effect waves-light m-r-10"><i class="fa fa-save"></i> Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-body" align="center">
+                <h4 class="card-title">Imagen de Usuario</h4>
+                <h6 class="card-subtitle">Actualizar imagen del usuario</h6>
+                <div class="p-t-10">
+                    <img *ngIf="!imageTemp" [src]="user.image | image" class="w-150 mb-3">
+                    <img *ngIf="imageTemp" [src]="imageTemp" class="w-150 mb-3">
+                    <input type="file" id="input-file-now" class="dropify" (change)="onFileChange($event.target.files[0])" />
+                </div>
+
+                <button type="button" class="btn btn-block btn-success waves-effect waves-light m-r-10 mt-4" (click)="uploadFile()"><i class="fa fa-cloud-upload"></i> Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>

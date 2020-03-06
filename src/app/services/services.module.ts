@@ -7,7 +7,8 @@ import {
   SharedService,
   SidebarService,
   UserService,
-  LoginGuard
+  LoginGuard,
+  ImageService
  } from './services.index';
 
 @NgModule({
@@ -17,7 +18,8 @@ import {
     SharedService,
     SidebarService,
     UserService,
-    LoginGuard
+    LoginGuard,
+    ImageService
   ],
   imports: [
     CommonModule,

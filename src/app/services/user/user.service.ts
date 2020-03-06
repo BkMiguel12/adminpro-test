@@ -5,6 +5,7 @@ import { User } from '../../models/User.model';
 import { URL_SERVICE } from '../../config/config';
 import Swal from 'sweetalert2';
 import { map } from "rxjs/operators";
+import { ImageService } from '../image/image.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,9 @@ export class UserService {
   public user: User;
   public token: string;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, 
+              private router: Router,
+              private _imageService: ImageService) {
     this.loadLocal();
    }
 
@@ -83,6 +86,39 @@ export class UserService {
           return res.user;
         })
       )
+  }
+
+  updateUser(user: User) {
+    let url = this.url + `/${this.user._id}?token=${this.token}`;
+
+    console.log(url);
+
+    return this.http.put(url, user).pipe(
+      map((res: any) => {
+        console.log(res);
+        let user = res.user;
+        this.saveLocal(user._id, this.token, user);
+
+        Swal.fire('Usuario actualizado!', user.name, 'success');
+
+        return true;
+      })
+    );
+  }
+
+  uploadImage(file: File, id: string) {
+    console.log(file);
+    let formData = new FormData();
+    formData.append('image', file, file.name);
+
+    this._imageService.uploadImage(formData, 'users', id)
+      .then((res: any) => {
+        this.user.image = res.user.image;
+        Swal.fire('Imagen Actualizada!', this.user.name, 'success');
+
+        this.saveLocal(id, this.token, this.user);
+      })
+      .catch(err => console.log('Error', err));
   }
 
   saveLocal(id: string, token: string, user: User) {

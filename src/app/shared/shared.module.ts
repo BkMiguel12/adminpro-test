@@ -2,10 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
+// Components
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { NotpagefoundComponent } from './notpagefound/notpagefound.component';
+
+// Pipes
+import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +26,8 @@ import { NotpagefoundComponent } from './notpagefound/notpagefound.component';
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    PipesModule
   ]
 })
 export class SharedModule { }

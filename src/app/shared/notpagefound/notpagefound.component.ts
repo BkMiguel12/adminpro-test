@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-notpagefound',
   templateUrl: './notpagefound.component.html',
   styleUrls: ['./notpagefound.component.scss']
 })
-export class NotpagefoundComponent implements OnInit {
+export class NotpagefoundComponent {
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  public year:number = new Date().getFullYear();
 
 }

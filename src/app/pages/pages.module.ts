@@ -8,7 +8,7 @@ import { ComponentsModule } from '../components/components.module';
 import { PipesModule } from '../pipes/pipes.module';
 
 // Routes
-import { PAGES_ROUTES } from './pages.routes';
+import { PagesRoutingModule } from './pages.routing';
 
 // COmponents
 import { DashboardComponent } from '../pages/dashboard/dashboard.component';
@@ -43,7 +43,7 @@ import { ProfileComponent } from './profile/profile.component';
     FormsModule,
     ComponentsModule,
     PipesModule,
-    PAGES_ROUTES
+    PagesRoutingModule
   ]
 })
 export class PagesModule { }

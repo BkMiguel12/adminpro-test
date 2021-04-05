@@ -7,15 +7,15 @@ import { ComponentsModule } from './components/components.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Routes
-import { APP_ROUTES } from './app.routes';
+import { AppRoutingModule } from './app-routing.module';
 
 // Services (module)
 import { ServicesModule } from './services/services.module';
 
 // Components
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './login/register.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { RegisterComponent } from './login/register.component';
   ],
   imports: [
     BrowserModule,
-    APP_ROUTES,
+    AppRoutingModule,
     PagesModule,
     ComponentsModule,
     ServicesModule,

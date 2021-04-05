@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { User } from '../models/User.model';
+import { User } from '../../models/User.model';
 import Swal from 'sweetalert2';
-import { UserService } from '../services/services.index';
+import { UserService } from '../../services/services.index';
 
 declare function init_scripts();
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['../login/login.component.scss']
 })
 export class RegisterComponent implements OnInit {
 

@@ -14,11 +14,11 @@ import { ProfileComponent } from './profile/profile.component';
 
 const pagesRoutes: Routes = [
     {
-        path: '',
+        path: 'dashboard',
         component: PagesComponent,
         canActivate: [ LoginGuard ],
         children: [
-            { path: 'dashboard', component: DashboardComponent, data: {title: 'Dashboard'} },
+            { path: '', component: DashboardComponent, data: {title: 'Dashboard'} },
             { path: 'account-settings', component: AccountSettingsComponent, data: {title: 'Ajustes del tema'} },
             { path: 'progress', component: ProgressComponent, data: {title: 'Progresos'} },
             { path: 'graphics1', component: Graphics1Component, data: {title: 'Gráficas'} },

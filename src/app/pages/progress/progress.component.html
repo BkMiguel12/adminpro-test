@@ -22,7 +22,9 @@
   <div class="col-6">
     <div class="card">
       <div class="card-body">
-        <app-increment (emitChangeValue)="percentage1 = $event" [title]="'Incrementador Azul'"
+        <app-increment 
+          (emitChangeValue)="percentage1 = $event" 
+          [title]="'Incrementador Azul'"
           [percentage]="percentage1">
         </app-increment>
       </div>
@@ -32,7 +34,10 @@
   <div class="col-6">
     <div class="card">
       <div class="card-body">
-        <app-increment (emitChangeValue)="percentage2 = $event" [title]="'Incrementador Rojo'"
+        <app-increment 
+          (emitChangeValue)="percentage2 = $event" 
+          [btnClass]="'btn-outline-danger'"
+          [title]="'Incrementador Rojo'"
           [percentage]="percentage2">
         </app-increment>
       </div>

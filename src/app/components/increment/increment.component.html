@@ -2,14 +2,14 @@
 
 <div class="input-group">
   <div class="input-group-prepend" id="button-addon41">
-    <button class="btn btn-outline-primary" type="button" (click)="changeValue(-5)">
+    <button [ngClass]="btnClass" type="button" (click)="changeValue(-5)">
       <i class="mdi mdi-minus"></i>
     </button>
   </div>
   <input #perInput type="number" class="form-control" name="percentage" [(ngModel)]="percentage"
     (ngModelChange)="onChange($event)" min="1" max="100" minlength="1" maxlength="3">
   <div class="input-group-append" id="button-addon2">
-    <button class="btn btn-outline-primary" type="button" (click)="changeValue(+5)">
+    <button [ngClass]="btnClass" type="button" (click)="changeValue(+5)">
       <i class="mdi mdi-plus"></i>
     </button>
   </div>

@@ -9,6 +9,7 @@ export class IncrementComponent implements OnInit {
 
   @Input() percentage: number = 50;
   @Input() title: string = 'Incrementador'
+  @Input() btnClass: string = 'btn-outline-info';
 
   @Output() emitChangeValue: EventEmitter<number> = new EventEmitter;
 
@@ -17,6 +18,7 @@ export class IncrementComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.btnClass = `btn ${this.btnClass}`
   }
 
   onChange(value) {

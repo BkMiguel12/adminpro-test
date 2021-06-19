@@ -13,7 +13,7 @@ export class IncrementComponent implements OnInit {
 
   @Output() emitChangeValue: EventEmitter<number> = new EventEmitter;
 
-  @ViewChild('perInput', { static: false }) perInput: ElementRef;
+  @ViewChild('perInput') perInput: ElementRef;
 
   constructor() { }
 

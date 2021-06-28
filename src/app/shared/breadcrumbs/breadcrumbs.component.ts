@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router, ActivationEnd } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Title, Meta, MetaDefinition } from '@angular/platform-browser';
 
 @Component({
@@ -9,12 +9,13 @@ import { Title, Meta, MetaDefinition } from '@angular/platform-browser';
   templateUrl: './breadcrumbs.component.html',
   styleUrls: ['./breadcrumbs.component.scss']
 })
-export class BreadcrumbsComponent implements OnInit {
+export class BreadcrumbsComponent implements OnDestroy {
 
   public titleBread: string;
+  public titleSub$: Subscription;
 
   constructor(private router: Router, private title: Title, private meta: Meta) {
-    this.getDataRoute().subscribe((res) => {
+    this.titleSub$ = this.getDataRoute().subscribe((res) => {
       console.log(res);
       this.titleBread = res;
       this.title.setTitle(this.titleBread);
@@ -27,9 +28,6 @@ export class BreadcrumbsComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-  }
-
   getDataRoute():Observable<string> {
     return this.router.events
       .pipe(
@@ -37,6 +35,10 @@ export class BreadcrumbsComponent implements OnInit {
         filter((event: ActivationEnd) => event.snapshot.firstChild === null),
         map(event => event.snapshot.data.title)
       )
+  }
+
+  ngOnDestroy() {
+    this.titleSub$.unsubscribe();
   }
 
 }

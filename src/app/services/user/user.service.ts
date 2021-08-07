@@ -1,36 +1,38 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { User } from '../../models/User.model';
-import { URL_SERVICE } from '../../config/config';
-import Swal from 'sweetalert2';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Router } from "@angular/router";
+import { User } from "../../models/User.model";
+import Swal from "sweetalert2";
 import { map } from "rxjs/operators";
-import { ImageService } from '../image/image.service';
+import { ImageService } from "../image/image.service";
+import { RegisterForm } from "../../models/RegisterForm.interface";
+import { environment } from "../../../environments/environment";
+
+const base_url = environment.baseUrl;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class UserService {
-
-  public url:string = URL_SERVICE + '/users';
-
   public user: User;
   public token: string;
 
-  constructor(private http: HttpClient, 
-              private router: Router,
-              private _imageService: ImageService) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private _imageService: ImageService
+  ) {
     this.loadLocal();
-   }
+  }
 
   isLogged() {
-    return (this.token) ? true : false;
-  } 
+    return this.token ? true : false;
+  }
 
   loadLocal() {
-    if(localStorage.getItem('tokenPro')) {
-      this.token = localStorage.getItem('tokenPro');
-      this.user = JSON.parse(localStorage.getItem('user'));
+    if (localStorage.getItem("tokenPro")) {
+      this.token = localStorage.getItem("tokenPro");
+      this.user = JSON.parse(localStorage.getItem("user"));
     } else {
       this.token = null;
       this.user = null;
@@ -38,58 +40,50 @@ export class UserService {
   }
 
   login(user: User, remember: boolean = false) {
-    let url = URL_SERVICE + '/login';
+    let url = base_url + "/login";
 
-    if(remember) {
-      localStorage.setItem('email_record', user.email);
+    if (remember) {
+      localStorage.setItem("email_record", user.email);
     } else {
-      localStorage.removeItem('email_record');
+      localStorage.removeItem("email_record");
     }
 
-    return this.http.post(url, user)
-      .pipe(
-        map((res:any) => {
-          this.saveLocal(res.id, res.token, res.user);
-          return true;
-        })
-      );
+    return this.http.post(url, user).pipe(
+      map((res: any) => {
+        this.saveLocal(res.id, res.token, res.user);
+        return true;
+      })
+    );
   }
 
   googleLogin(token: string) {
-    let url = URL_SERVICE + '/login/google';
+    let url = base_url + "/login/google";
 
-    return this.http.post(url, {token: token})
-      .pipe(
-        map((res: any) => {
-          this.saveLocal(res.id, res.token, res.user);
-          return true;
-        })
-      );
+    return this.http.post(url, { token: token }).pipe(
+      map((res: any) => {
+        this.saveLocal(res.id, res.token, res.user);
+        return true;
+      })
+    );
   }
 
   logout() {
     this.token = null;
     this.user = null;
 
-    localStorage.removeItem('tokenPro');
-    localStorage.removeItem('user');
+    localStorage.removeItem("tokenPro");
+    localStorage.removeItem("user");
 
-    this.router.navigate(['/login']);
+    this.router.navigate(["/login"]);
   }
 
-  createUser(user: User) {
-    console.log(user);
-    return this.http.post(this.url, user)
-      .pipe(
-        map( (res: any) => {
-          Swal.fire('Usuario creado!', user.email, 'success');
-          return res.user;
-        })
-      )
+  createUser(formData: RegisterForm) {
+    console.log(formData);
+    return this.http.post(`${base_url}/users`, formData);
   }
 
   updateUser(user: User) {
-    let url = this.url + `/${this.user._id}?token=${this.token}`;
+    let url = base_url + `/${this.user._id}?token=${this.token}`;
 
     console.log(url);
 
@@ -99,7 +93,7 @@ export class UserService {
         let user = res.user;
         this.saveLocal(user._id, this.token, user);
 
-        Swal.fire('Usuario actualizado!', user.name, 'success');
+        Swal.fire("Usuario actualizado!", user.name, "success");
 
         return true;
       })
@@ -109,22 +103,23 @@ export class UserService {
   uploadImage(file: File, id: string) {
     console.log(file);
     let formData = new FormData();
-    formData.append('image', file, file.name);
+    formData.append("image", file, file.name);
 
-    this._imageService.uploadImage(formData, 'users', id)
+    this._imageService
+      .uploadImage(formData, "users", id)
       .then((res: any) => {
         this.user.image = res.user.image;
-        Swal.fire('Imagen Actualizada!', this.user.name, 'success');
+        Swal.fire("Imagen Actualizada!", this.user.name, "success");
 
         this.saveLocal(id, this.token, this.user);
       })
-      .catch(err => console.log('Error', err));
+      .catch((err) => console.log("Error", err));
   }
 
   saveLocal(id: string, token: string, user: User) {
-    localStorage.setItem('id', id);
-    localStorage.setItem('tokenPro', token);
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem("id", id);
+    localStorage.setItem("tokenPro", token);
+    localStorage.setItem("user", JSON.stringify(user));
 
     this.user = user;
     this.token = token;

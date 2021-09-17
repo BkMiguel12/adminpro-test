@@ -7,6 +7,8 @@ import { map } from "rxjs/operators";
 import { ImageService } from "../image/image.service";
 import { RegisterForm } from "../../models/RegisterForm.interface";
 import { environment } from "../../../environments/environment";
+import { LoginForm } from "../../models/LoginForm.interface";
+import { tap } from 'rxjs/operators';
 
 const base_url = environment.baseUrl;
 
@@ -39,22 +41,22 @@ export class UserService {
     }
   }
 
-  login(user: User, remember: boolean = false) {
-    let url = base_url + "/login";
+  // login(user: User, remember: boolean = false) {
+  //   let url = base_url + "/login";
 
-    if (remember) {
-      localStorage.setItem("email_record", user.email);
-    } else {
-      localStorage.removeItem("email_record");
-    }
+  //   if (remember) {
+  //     localStorage.setItem("email_record", user.email);
+  //   } else {
+  //     localStorage.removeItem("email_record");
+  //   }
 
-    return this.http.post(url, user).pipe(
-      map((res: any) => {
-        this.saveLocal(res.id, res.token, res.user);
-        return true;
-      })
-    );
-  }
+  //   return this.http.post(url, user).pipe(
+  //     map((res: any) => {
+  //       this.saveLocal(res.id, res.token, res.user);
+  //       return true;
+  //     })
+  //   );
+  // }
 
   googleLogin(token: string) {
     let url = base_url + "/login/google";
@@ -78,8 +80,19 @@ export class UserService {
   }
 
   createUser(formData: RegisterForm) {
-    console.log(formData);
-    return this.http.post(`${base_url}/users`, formData);
+    return this.http.post(`${base_url}/users`, formData).pipe(
+      tap( (resp: any) => {
+        localStorage.setItem('token', resp.token);
+      })
+    );
+  }
+
+  login(formData: LoginForm) {
+    return this.http.post(`${base_url}/login`, formData).pipe(
+      tap( (resp: any) => {
+        localStorage.setItem('token', resp.token);
+      })
+    );
   }
 
   updateUser(user: User) {

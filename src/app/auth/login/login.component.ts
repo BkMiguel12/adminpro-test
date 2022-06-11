@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormBuilder, Validators } from "@angular/forms";
 import { UserService } from "../../services/services.index";
@@ -27,7 +27,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private userService: UserService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit() {
@@ -59,14 +60,16 @@ export class LoginComponent implements OnInit {
 
       this.userService
         .googleLogin(token)
-        .subscribe(() => (window.location.href = "#/dashboard")); // No se visualiza correctamente con navigate
+        .subscribe(() => {
+          this.ngZone.run(() => {
+            this.router.navigateByUrl('/');
+          })
+        });
     });
   }
 
   login() {
-    console.log('HOOOOLA');
     if (this.loginForm.invalid) {
-      console.log('aaa');
       return;
     }
 

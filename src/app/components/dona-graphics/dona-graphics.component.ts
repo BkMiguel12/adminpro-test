@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ChartType } from 'chart.js';
-import { Label, SingleDataSet } from 'ng2-charts';
+import { ChartType, ChartDataset } from 'chart.js';
 
 @Component({
   selector: 'app-dona-graphics',
@@ -9,8 +8,8 @@ import { Label, SingleDataSet } from 'ng2-charts';
 })
 export class DonaGraphicsComponent implements OnInit {
 
-  @Input() chartLabels: Label[];
-  @Input() chartData: SingleDataSet[];
+  @Input() chartLabels;
+  @Input() chartData: ChartDataset[];
   @Input() chartType: ChartType;
   @Input() title: string;
 

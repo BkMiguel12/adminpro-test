@@ -24,7 +24,7 @@ export class PromisesComponent implements OnInit {
         console.log(contador);
 
         if(contador === 3) {
-          resolve();
+          resolve(true);
           clearInterval(interval);
         }
       }, 1000);

@@ -64,18 +64,21 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    console.log('HOOOOLA');
     if (this.loginForm.invalid) {
+      console.log('aaa');
       return;
     }
 
     this.userService.login(this.loginForm.value).subscribe(
       (ok) => {
+        console.log(ok);
         if (this.loginForm.get('remember').value) {
           localStorage.setItem('email', this.loginForm.get('email').value);
         } else {
           localStorage.removeItem('email');
         }
-        // this.router.navigate(["/dashboard"]);
+        this.router.navigate(["/dashboard"]);
       },
       (err) => {
         console.log(err);

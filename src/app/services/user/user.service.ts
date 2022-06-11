@@ -28,6 +28,7 @@ export class UserService {
   }
 
   isLogged() {
+    console.log(this.token);
     return this.token ? true : false;
   }
 
@@ -60,10 +61,11 @@ export class UserService {
 
   googleLogin(token: string) {
     let url = base_url + "/login/google";
-
+    console.log('HOOOOLA');
     return this.http.post(url, { token: token }).pipe(
       map((res: any) => {
-        this.saveLocal(res.id, res.token, res.user);
+        console.log(res);
+        this.saveLocal(res.user.uid, res.token, res.user);
         return true;
       })
     );
@@ -90,7 +92,8 @@ export class UserService {
   login(formData: LoginForm) {
     return this.http.post(`${base_url}/login`, formData).pipe(
       tap( (resp: any) => {
-        localStorage.setItem('token', resp.token);
+        console.log(resp);
+        this.saveLocal(resp.user.uid, resp.token, resp.user)
       })
     );
   }
@@ -102,7 +105,6 @@ export class UserService {
 
     return this.http.put(url, user).pipe(
       map((res: any) => {
-        console.log(res);
         let user = res.user;
         this.saveLocal(user._id, this.token, user);
 

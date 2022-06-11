@@ -3,12 +3,13 @@ import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { User } from "../../models/User.model";
 import Swal from "sweetalert2";
-import { map } from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
 import { ImageService } from "../image/image.service";
 import { RegisterForm } from "../../models/RegisterForm.interface";
 import { environment } from "../../../environments/environment";
 import { LoginForm } from "../../models/LoginForm.interface";
 import { tap } from 'rxjs/operators';
+import { Observable, of } from "rxjs";
 
 const base_url = environment.baseUrl;
 
@@ -42,23 +43,6 @@ export class UserService {
     }
   }
 
-  // login(user: User, remember: boolean = false) {
-  //   let url = base_url + "/login";
-
-  //   if (remember) {
-  //     localStorage.setItem("email_record", user.email);
-  //   } else {
-  //     localStorage.removeItem("email_record");
-  //   }
-
-  //   return this.http.post(url, user).pipe(
-  //     map((res: any) => {
-  //       this.saveLocal(res.id, res.token, res.user);
-  //       return true;
-  //     })
-  //   );
-  // }
-
   googleLogin(token: string) {
     let url = base_url + "/login/google";
     console.log('HOOOOLA');
@@ -89,6 +73,23 @@ export class UserService {
     );
   }
 
+  validateToken(): Observable<boolean> {
+    const token  = localStorage.getItem('tokenPro') || '';
+
+    return this.http.get(`${base_url}/login/renew-token`, {
+      headers: {
+        'x-token': token
+      }
+    }).pipe(
+      tap((resp:any) => {
+        console.log(resp);
+        localStorage.setItem("tokenPro", token);
+      }),
+      map(resp => true),
+      catchError(error => of(false))
+    );
+  }
+
   login(formData: LoginForm) {
     return this.http.post(`${base_url}/login`, formData).pipe(
       tap( (resp: any) => {
@@ -100,8 +101,6 @@ export class UserService {
 
   updateUser(user: User) {
     let url = base_url + `/${this.user._id}?token=${this.token}`;
-
-    console.log(url);
 
     return this.http.put(url, user).pipe(
       map((res: any) => {
@@ -116,7 +115,6 @@ export class UserService {
   }
 
   uploadImage(file: File, id: string) {
-    console.log(file);
     let formData = new FormData();
     formData.append("image", file, file.name);
 

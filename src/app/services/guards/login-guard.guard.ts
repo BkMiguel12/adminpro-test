@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
 import { UserService } from '../user/user.service';
 
@@ -8,15 +9,14 @@ export class LoginGuard implements CanActivate {
 
   constructor(private userService: UserService, private router: Router){}
 
-  canActivate() {
-    if(this.userService.isLogged()) {
-      console.log('APROBADO');
-      return true;
-    } else {
-      console.log('RECHAZADO');
-      this.router.navigate(['/login']);
-      return false;
-    }
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    return this.userService.validateToken().pipe(
+      tap(isAuth => {
+        if(!isAuth) {
+          this.router.navigateByUrl('/login');
+        }
+      })
+    );
   }
   
 }

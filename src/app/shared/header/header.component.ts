@@ -11,11 +11,11 @@ export class HeaderComponent implements OnInit {
 
   public user: User;
 
-  constructor(private _userService: UserService) { }
-
-  ngOnInit() {
-    this.user = this._userService.user;
+  constructor(private _userService: UserService) { 
+    this.user = _userService.user;
   }
+
+  ngOnInit() {}
 
   logout() {
     this._userService.logout();

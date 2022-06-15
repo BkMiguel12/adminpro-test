@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { User } from "../../models/User.model";
@@ -23,9 +23,14 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private _imageService: ImageService
+    private _imageService: ImageService,
+    private ngZone: NgZone
   ) {
     this.loadLocal();
+  }
+
+  get getToken(): string {
+    return localStorage.getItem('tokenPro') || '';
   }
 
   isLogged() {
@@ -45,7 +50,6 @@ export class UserService {
 
   googleLogin(token: string) {
     let url = base_url + "/login/google";
-    console.log('HOOOOLA');
     return this.http.post(url, { token: token }).pipe(
       map((res: any) => {
         console.log(res);
@@ -62,7 +66,9 @@ export class UserService {
     localStorage.removeItem("tokenPro");
     localStorage.removeItem("user");
 
-    this.router.navigate(["/login"]);
+    this.ngZone.run(() => {
+      this.router.navigateByUrl('/login');
+    })
   }
 
   createUser(formData: RegisterForm) {
@@ -74,18 +80,17 @@ export class UserService {
   }
 
   validateToken(): Observable<boolean> {
-    const token  = localStorage.getItem('tokenPro') || '';
-
     return this.http.get(`${base_url}/login/renew-token`, {
       headers: {
-        'x-token': token
+        'x-token': this.getToken
       }
     }).pipe(
-      tap((resp:any) => {
-        console.log(resp);
-        localStorage.setItem("tokenPro", token);
+      map((resp:any) => {
+        const { name, email, google, image, role, uid } = resp.user;
+        this.user = new User(name, email, '', image, role, google, uid);
+        localStorage.setItem("tokenPro", this.getToken);
+        return true;
       }),
-      map(resp => true),
       catchError(error => of(false))
     );
   }
@@ -100,18 +105,24 @@ export class UserService {
   }
 
   updateUser(user: User) {
-    let url = base_url + `/${this.user._id}?token=${this.token}`;
+    let url = base_url + `/users/${this.user._id}`;
+    // let url = base_url + `/${this.user._id}?token=${this.getToken}`;
 
-    return this.http.put(url, user).pipe(
-      map((res: any) => {
-        let user = res.user;
-        this.saveLocal(user._id, this.token, user);
+    return this.http.put(url, user, {
+      headers: {
+        'x-token': this.getToken
+      }
+    });
+    // .pipe(
+    //   map((res: any) => {
+    //     let user = res.user;
+    //     this.saveLocal(user._id, this.token, user);
 
-        Swal.fire("Usuario actualizado!", user.name, "success");
+    //     Swal.fire("Usuario actualizado!", user.name, "success");
 
-        return true;
-      })
-    );
+    //     return true;
+    //   })
+    // );
   }
 
   uploadImage(file: File, id: string) {

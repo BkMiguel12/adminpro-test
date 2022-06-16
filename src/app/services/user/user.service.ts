@@ -127,12 +127,14 @@ export class UserService {
 
   uploadImage(file: File, id: string) {
     let formData = new FormData();
-    formData.append("image", file, file.name);
+    formData.append("img", file);
+
+    console.log(formData);
 
     this._imageService
       .uploadImage(formData, "users", id)
       .then((res: any) => {
-        this.user.image = res.user.image;
+        this.user.image = res.fileName;
         Swal.fire("Imagen Actualizada!", this.user.name, "success");
 
         this.saveLocal(id, this.token, this.user);

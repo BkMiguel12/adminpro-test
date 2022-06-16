@@ -36,6 +36,8 @@ export class ProfileComponent implements OnInit {
       this.user.email = email;
 
       Swal.fire("Usuario actualizado!", this.user.name, "success");
+    }, (err) => {
+      Swal.fire("Error", err.error.msg, "error");
     });
 
   }
@@ -47,22 +49,17 @@ export class ProfileComponent implements OnInit {
   onFileChange(file: File) {
 
     if(!file) {
-      this.file = null;
-      return;
-    }
-    
-    if(file.type.indexOf('image') < 0) {
-      this.file = null;
-      Swal.fire('Formato no permitido', 'El archivo seleccionado no es una imagen', 'error');
+      this.imageTemp = null;
       return;
     }
 
-    let fileReader = new FileReader();
-    let urlTemp = fileReader.readAsDataURL(file);
+    this.file = file;
+
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
 
     fileReader.onloadend = () => this.imageTemp = fileReader.result;
 
-    this.file = file;
   }
 
 }

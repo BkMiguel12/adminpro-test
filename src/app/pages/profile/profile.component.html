@@ -16,7 +16,7 @@
                         <label for="exampleInputEmail1">Correo del usuario</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="ti-email"></i></div>
-                            <input formControlName="email" name="email" type="email" class="form-control" placeholder="Ingrese su correo">
+                            <input formControlName="email" name="email" type="email" class="form-control" [readOnly]="user.google" placeholder="Ingrese su correo">
                         </div>
                     </div>
                     <button type="submit" [disabled]="profileForm.invalid" class="btn btn-success waves-effect waves-light m-r-10"><i class="fa fa-save"></i> Guardar</button>
@@ -36,7 +36,7 @@
                     <input type="file" id="input-file-now" class="dropify" (change)="onFileChange($event.target.files[0])" />
                 </div>
 
-                <button type="button" class="btn btn-block btn-success waves-effect waves-light m-r-10 mt-4" (click)="uploadFile()"><i class="fa fa-cloud-upload"></i> Actualizar</button>
+                <button type="button" class="btn btn-block btn-success waves-effect waves-light m-r-10 mt-4" [disabled]="!file" (click)="uploadFile()"><i class="fa fa-cloud-upload"></i> Actualizar</button>
             </div>
         </div>
     </div>

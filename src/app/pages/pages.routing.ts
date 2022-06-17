@@ -11,6 +11,9 @@ import { RxjsComponent } from './rxjs/rxjs.component';
 import { LoginGuard } from '../services/services.index';
 import { ProfileComponent } from './profile/profile.component';
 
+// Maintainer
+import { UsersComponent } from './maintainer/users/users.component';
+
 
 const pagesRoutes: Routes = [
     {
@@ -25,6 +28,10 @@ const pagesRoutes: Routes = [
             { path: 'promises', component: PromisesComponent, data: {title: 'Promesas'} },
             { path: 'rxjs', component: RxjsComponent, data: {title: 'RxJs - Observables'} },
             { path: 'profile', component: ProfileComponent, data: {title: 'Perfil de Usuario'} },
+            
+            // Maintainer
+            { path: 'users', component: UsersComponent, data: {title: 'Usuarios de la aplicación'} },
+            
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]
     }

@@ -10,6 +10,7 @@ import { environment } from "../../../environments/environment";
 import { LoginForm } from "../../models/LoginForm.interface";
 import { tap } from 'rxjs/operators';
 import { Observable, of } from "rxjs";
+import { GetUser } from "src/app/models/GetUser.interface";
 
 const base_url = environment.baseUrl;
 
@@ -31,6 +32,14 @@ export class UserService {
 
   get getToken(): string {
     return localStorage.getItem('tokenPro') || '';
+  }
+
+  get headers() {
+    return {
+      headers: {
+        'x-token': this.getToken
+      }
+    }
   }
 
   isLogged() {
@@ -80,11 +89,7 @@ export class UserService {
   }
 
   validateToken(): Observable<boolean> {
-    return this.http.get(`${base_url}/login/renew-token`, {
-      headers: {
-        'x-token': this.getToken
-      }
-    }).pipe(
+    return this.http.get(`${base_url}/login/renew-token`, this.headers).pipe(
       map((resp:any) => {
         const { name, email, google, image, role, uid } = resp.user;
         this.user = new User(name, email, '', image, role, google, uid);
@@ -108,11 +113,7 @@ export class UserService {
     let url = base_url + `/users/${this.user._id}`;
     // let url = base_url + `/${this.user._id}?token=${this.getToken}`;
 
-    return this.http.put(url, user, {
-      headers: {
-        'x-token': this.getToken
-      }
-    });
+    return this.http.put(url, user, this.headers);
     // .pipe(
     //   map((res: any) => {
     //     let user = res.user;
@@ -149,5 +150,19 @@ export class UserService {
 
     this.user = user;
     this.token = token;
+  }
+
+  getUsers(from: number = 0) {
+    const url = `${base_url}/users?from=${from}`;
+    return this.http.get<GetUser>(url, this.headers)
+      .pipe(
+        map(resp => {
+          const users = resp.users.map(user => new User(user.name, user.email, '', user.image, user.role, user.google, user._id));
+          return {
+            total: resp.total,
+            users
+          };
+        })
+      );
   }
 }

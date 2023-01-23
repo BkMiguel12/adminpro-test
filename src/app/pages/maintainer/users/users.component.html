@@ -2,7 +2,13 @@
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <input type="text" class="form-control" placeholder="Search user...">
+        <input 
+            type="text"
+            class="form-control"
+            placeholder="Search user..."
+            (keyup)="searchUsers(searchInput.value)"
+            #searchInput
+        >
       </div>
     </div>
   </div>
@@ -57,7 +63,7 @@
                     </table>
                 </div>
 
-                <div class="button-container">
+                <div class="button-container" *ngIf="searchInput.value.length === 0">
                     <button class="btn btn-outline-info mr-2" (click)="changePage(-5)">Previous</button>
                     <button class="btn btn-outline-info" (click)="changePage(5)">Next</button>
                 </div>
